@@ -18,13 +18,14 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public Ticket addTicket(Ticket ticket) {
 
-		// 1 dk  sonra expire olsun
+		// 1 dk sonra expire olsun
 		Long expire = 1 * 60 * 1000L;
 		cacheService.put("nowSale", ticket, expire);
-		
-		
+
 		cacheService.put("ticket", ticket);
 		cacheService.put("ticket", "ticket_active", ticket);
+		cacheService.put("ticket", "ticket_active2", ticket);
+
 		return null;
 	}
 
@@ -32,10 +33,7 @@ public class TicketServiceImpl implements TicketService {
 	public Ticket getTicket(Integer ticketId) {
 		Object nowSale;
 		try {
-			// superKey = cacheService.get("ticket");
-			//
-			// ticket_active = ((Map) superKey).get("ticket_active");
-			nowSale = ((Map) cacheService.get("nowSale")).get("nowSale");
+			nowSale = cacheService.get("nowSale");
 		} catch (HazelcastException e) {
 			return null;
 		}

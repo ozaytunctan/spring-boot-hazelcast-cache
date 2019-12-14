@@ -1,6 +1,5 @@
 package org.ozaytunctan.components;
 
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.ozaytunctan.exceptions.HazelcastException;
@@ -22,13 +21,16 @@ public class HazelcastCacheInstance implements CacheService {
 		if (mapValues.isEmpty())
 			throw new HazelcastException("Map key entry not found key:" + key);
 
-		return mapValues;
+		return mapValues.get(key);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object get(String key, String subKey) throws HazelcastException {
-		return ((Map<String, Object>) get(key)).get(subKey);
+		IMap<String, Object> mapValues = hazelcastInstance.getMap(key);
+		if (mapValues.isEmpty())
+			throw new HazelcastException("Map key entry not found key:" + key);
+
+		return mapValues.get(subKey);
 	}
 
 	@Override
